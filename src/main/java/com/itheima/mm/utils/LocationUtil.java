@@ -18,7 +18,7 @@ public class LocationUtil {
 		//使用HttpClient发送请求到高德地图的逆地理解析的路径，携带key和经纬度坐标，可以获取城市名
 		// https://lbs.amap.com/api/webservice/guide/api/georegeo 逆地址解析
 		// amap_api 注册高德地图开发者，创建应用，获取apikey
-		String amap_api_key = "95d8df2fa2c8400d5dc9ea63c0063b7b";
+		String amap_api_key = "97112fb9de20d1aba0133e475ba119d7";
 		String url = "https://restapi.amap.com/v3/geocode/regeo?key="+amap_api_key+"&"+"location="+location;
 		//发送一个Get请求，获取响应数据
 		String jsonData =  HttpUtil.httpGet(url);
