@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mm.dao.QuestionDao">
+    <resultMap id="questionMap" type="Question">
+        <id column="id" property="id"></id>
+        <result column="content" property="content"></result>
+        <result column="grade" property="grade"></result>
+        <result column="title" property="title"></result>
+        <result column="isFavorite" property="isFavorite"></result>
+        <result column="type" property="type"></result>
+        <result column="video" property="video"></result>
+        <result column="isFamous" property="isFamous"></result>
+        <result column="" property=""></result>
+        <collection property="selection"
+                    column="id"
+                    select="com.itheima.mm.dao.QuestionItemDao.findQuestionItemListByQuestionId"></collection>
+       <collection property="tags"
+                   column="id"
+                   select="com.itheima.mm.dao.TagDao.findTagListByQuestionId"></collection>
+    </resultMap>
+    <select id="findQuestionListByCategoryId" parameterType="map" resultMap="questionMap">
+        select
+        tq.id,
+        (SELECT tag from tr_member_question WHERE memberId=#{id} and questionId=tq.id) answerTag,
+        tq.analysis content,
+        tq.difficulty grade,
+        <if test="categoryKind == 2">
+            (select isFamous from t_company where id=#{categoryID}) isFamous,
+        </if>
+        (SELECT isFavorite FROM tr_member_question WHERE memberId=#{id} and questionId=tq.id) isFavorite,
+        tq.subject title,
+        tq.type,
+        tq.analysisVideo video
+        from
+        t_question tq
+
+        where
+        <if test="categoryKind == 1">
+            catalogId=#{categoryID}
+        </if>
+
+        <if test="categoryKind == 2">
+            companyId=#{categoryID}
+        </if>
+    </select>
+</mapper>

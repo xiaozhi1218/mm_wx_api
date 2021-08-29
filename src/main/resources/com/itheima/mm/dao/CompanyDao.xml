@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mm.dao.CompanyDao">
+    <select id="findCompanyList" parameterType="map" resultType="map">
+        SELECT
+        tc.id,tc.shortName title,
+        (select count(*) from t_question WHERE companyId=tc.id) allCount,
+        (SELECT count(*) FROM tr_member_question WHERE memberId=#{id} and
+        questionId in (SELECT id from t_question WHERE companyId=tc.id)) finishedCount
+        FROM
+        t_company tc
+        WHERE
+        cityId=(select cityId from t_wx_member where id=#{id})
+    </select>
+
+    <select id="findById" parameterType="int" resultType="Company">
+        select * from t_company where id=#{id}
+    </select>
+</mapper>

@@ -2,6 +2,8 @@ package com.itheima.mm.dao;
 
 import com.itheima.mm.pojo.WxMember;
 
+import java.util.Map;
+
 /**
  * 包名:com.itheima.mm.dao
  *
@@ -13,4 +15,15 @@ public interface MemberDao {
 
     void addMember(WxMember wxMember);
 
+    WxMember findById(Integer id);
+
+    void updateWxMember(WxMember wxMember);
+
+    Map findByMemberIdAndQuestionId(Map parameterMap);
+
+    void addMemberQuestion(Map parameterMap);
+
+    void updateMemberQuestion(Map parameterMap);
+
+    Map findMemberCenter(Integer id);
 }

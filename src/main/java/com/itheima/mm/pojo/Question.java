@@ -72,12 +72,23 @@ public class Question {
 		return selection;
 	  }
 
+
+	public boolean isAnswerIsRight() {
+		//什么时候为true,answerTag的值为0或者2的时候
+		if (answerTag != null) {
+			if (answerTag == 0 || answerTag == 2) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * 页面需要boolean类型返回
 	 * @return
 	 */
 	public boolean getIsFamous() {
-		return isFamous !=null && isFamous==1;
+		return isFamous !=null && isFamous == 1;
 	  }
 
 	/**
@@ -85,7 +96,8 @@ public class Question {
 	 * @return
 	 */
 	  public boolean getIsFinished() {
-		return isFinished !=null && isFinished==1;
+	  	//什么情况下代表做过这道题?做题标记不为空就表示做过这道题
+		return answerTag != null;
 	  }
 	 /**
 	 * 页面需要boolean类型返回

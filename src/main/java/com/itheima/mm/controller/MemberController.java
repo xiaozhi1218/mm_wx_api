@@ -54,4 +54,47 @@ public class MemberController {
             JsonUtils.printResult(response,new Result(false,"登录失败"));
         }
     }
+
+    @RequestMapping("/member/setCityCourse")
+    public void setCityCourse(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        try {
+            //1. 获取请求头中的Authorization
+            String authorization = request.getHeader("Authorization");
+            //2. 从authorization中获取用户的id
+            Integer id = Integer.valueOf(authorization.substring(7));
+
+            //3. 获取请求参数
+            Map parameterMap = JsonUtils.parseJSON2Object(request, Map.class);
+            //4. 根据id获取wxMember的信息(获取修改之前的数据)
+            WxMember wxMember = memberService.findById(id);
+            //设置要修改的数据
+            wxMember.setCityId((Integer) parameterMap.get("cityID"));
+            wxMember.setCourseId((Integer) parameterMap.get("subjectID"));
+
+            //5. 调用业务层的方法，设置wxMember的信息
+            memberService.updateWxMember(wxMember);
+            //修改成功
+            JsonUtils.printResult(response,new Result(true,"设置城市学科成功"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            JsonUtils.printResult(response,new Result(false,"设置城市学科失败"));
+        }
+    }
+
+    @RequestMapping("/member/center")
+    public void center(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        try {
+            //1. 获取请求头中的Authorization
+            String authorization = request.getHeader("Authorization");
+            //2. 从authorization中获取用户的id
+            Integer id = Integer.valueOf(authorization.substring(7));
+            //3. 获取个人中心的信息
+            Map resultMap = memberService.findMemberCenter(id);
+
+            JsonUtils.printResult(response,new Result(true,"查询个人中心成功",resultMap));
+        } catch (Exception e) {
+            e.printStackTrace();
+            JsonUtils.printResult(response,new Result(false,"查询个人中心失败"));
+        }
+    }
 }

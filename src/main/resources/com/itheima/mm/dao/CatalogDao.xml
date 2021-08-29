@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mm.dao.CatalogDao">
+    <select id="findCatalogList" parameterType="map" resultType="map">
+        SELECT
+        tc.id,tc.name title,
+        (select count(*) from t_question WHERE catalogId=tc.id) allCount,
+        (select count(*) from tr_member_question WHERE memberId=#{id} and
+        questionId in (SELECT id from t_question WHERE catalogId=tc.id)) finishedCount
+        FROM
+        t_catalog tc
+        WHERE
+        tc.courseId=(SELECT courseId from t_wx_member WHERE id=#{id})
+    </select>
+    
+    <select id="findDetail" parameterType="map" resultType="map">
+        select
+        id,
+        <if test="categoryKind == 1">
+            name title,
+            (select count(*) from t_question WHERE catalogId=#{categoryID}) allCount,
+            (select count(*) from tr_member_question WHERE memberId=#{id} and
+            questionId in (SELECT id from t_question WHERE catalogId=#{categoryID})) finishedCount
+            from
+            t_catalog
+
+        </if>
+        <if test="categoryKind == 2">
+            shortName title,
+            (select count(*) from t_question WHERE companyId=#{categoryID}) allCount,
+            (SELECT count(*) FROM tr_member_question WHERE memberId=#{id} and
+            questionId in (SELECT id from t_question WHERE companyId=#{categoryID})) finishedCount
+            from t_company
+        </if>
+        where
+        id=#{categoryID}
+    </select>
+
+    <select id="findById" parameterType="int" resultType="Catalog">
+        select * from t_catalog where id=#{id}
+    </select>
+</mapper>

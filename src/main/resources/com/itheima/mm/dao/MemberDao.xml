@@ -14,4 +14,46 @@
         insert into t_wx_member (nickName,avatarUrl,gender,city,province,country,language,openId,unionId,createTime)
     values (#{nickName},#{avatarUrl},#{gender},#{city},#{province},#{country},#{language},#{openId},#{unionId},#{createTime})
     </insert>
+    
+    <select id="findById" parameterType="int" resultType="WxMember">
+        select * from t_wx_member where id=#{id}
+    </select>
+    
+    <update id="updateWxMember" parameterType="WxMember">
+        update t_wx_member set nickName=#{nickName},avatarUrl=#{avatarUrl},gender=#{gender},city=#{city},province=#{province},
+        country=#{country},language=#{language},openId=#{openId},unionId=#{unionId},createTime=#{createTime},cityId=#{cityId},
+        courseId=#{courseId},lastCategoryKind=#{lastCategoryKind},lastCategoryType=#{lastCategoryType},lastCategoryId=#{lastCategoryId},
+        lastQuestionId=#{lastQuestionId} where id=#{id}
+    </update>
+    
+    
+    <select id="findByMemberIdAndQuestionId" parameterType="map" resultType="map">
+        select * from tr_member_question where memberId=#{memberId} and questionId=#{id}
+    </select>
+
+    <insert id="addMemberQuestion" parameterType="map">
+        insert into tr_member_question (memberId,questionId,isFavorite,tag,answerResult)
+        values (#{memberId},#{id},#{isFavorite},#{tag},#{answerResult})
+    </insert>
+    
+    <update id="updateMemberQuestion" parameterType="map">
+        update tr_member_question set isFavorite=#{isFavorite},tag=#{tag},answerResult=#{answerResult}
+        where memberId=#{memberId} and questionId=#{id}
+    </update>
+    
+    <select id="findMemberCenter" parameterType="int" resultType="map">
+        select
+         twm.lastCategoryType categoryType,
+         twm.lastCategoryKind categoryKind,
+         twm.lastCategoryId categoryId,
+         twm.lastQuestionId,
+         twm.courseId subjectID,
+         twm.cityId cityID,
+         (select dataValue from t_dict where id=twm.cityId) cityName,
+         (select count(*) from tr_member_question where memberId=#{id}) answerCount
+        from
+        t_wx_member twm
+        where
+        twm.id=#{id}
+    </select>
 </mapper>
